@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 # trap "kill 0" EXIT
 
-hf_cache="/nas-ssd2/hwang/huggingface" # CHANGE THIS TO YOUR OWN CACHE PATH
+hf_cache=$HF_HUB_CACHE # CHANGE THIS TO YOUR OWN CACHE PATH
 
 numgpu=2 # should match the number of processes in the input jsonl file, default to 2 for context-aware decoding
 available_port=$(python -c 'import socket; s=socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()')

@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 MODEL_CONFIG_CLASSES = list(MODEL_MAPPING.keys())
 MODEL_TYPES = tuple(conf.model_type for conf in MODEL_CONFIG_CLASSES)
 
-hf_token = "example" # your huggingface token
+hf_token = os.getenv('HF_TOKEN', None)
 
 def get_jsd(p, q):
     p = F.softmax(p, dim=-1)

@@ -37,7 +37,13 @@ The format of the input file is as follow:
 ## Run AdaCAD
 ### For Question Answering
 ```bash
+HF_TOKEN=your_huggingface_token # User Access Token to authenticate to the Hub.
+HF_HUB_CACHE=your_cache_path # where repositories from the Hub will be cached locally (models, datasets and spaces).
 bash run_nq.sh /path/to/your/input/file
+```
+As an exampe, run the following command:
+```bash
+bash run_nq.sh data/nq_swap_2_-1.json
 ```
 We explain the arguments in `run_nq.sh` as follows:
 - `GLOBALLEN`: the maximum sequence length of the model.
@@ -49,7 +55,7 @@ We explain the arguments in `run_nq.sh` as follows:
 - `GPUS`: number of gpus.
 - `FLAG`: whether to use int4 quantization to load the model.
 
-**Note:** Remember to use your own huggingface token (User Access Token to authenticate to the Hub) as `hf_token` in `group_decode_fileio_adacad.py`.
+**Note:** Remember to use your own huggingface token and set your local cache path.
 
 ## Acknowledgement
 We sincerely thank the authors of [CAD](https://github.com/xhan77/context-aware-decoding/tree/main) for their public code release.
@@ -60,4 +66,5 @@ We sincerely thank the authors of [CAD](https://github.com/xhan77/context-aware-
   title={AdaCAD: Adaptively Decoding to Balance Conflicts between Contextual and Parametric Knowledge},
   author={Han Wang and Archiki Prasad and Elias Stengel-Eskin and Mohit Bansal},
   year={2024},
+}
 ```
