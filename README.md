@@ -12,27 +12,7 @@ pip install -r requirements.txt
 ```
 
 ## Data
-We provide a sample input file `data/nq_swap_2_-1.json`.
-
-The format of the input file is as follows:
-```json
-{
-    "input_index": 0, // instances that decode together should have the same input_index
-    "assigned_model": "meta-llama/Meta-Llama-3-8B", // same model for all instances in context-aware decoding, but can use different models here, e.g., DExperts, contrastive decoding, proxy tuning, etc.
-    "assigned_process": 0, // which GPU should take this instance
-    "context_string": "The fourth season of Chicago Fire , an American drama television series with executive producer Dick Wolf , and producers Derek Haas , Michael Brandt , and Matt Olmstead , was ordered on February 5 , 2015 , by NBC , and premiered on October 13 , 2015 and concluded on May 17 , 2016 . The season contained 1078 episodes . \nUsing only the references listed above, answer the following question: \nQuestion: How many episodes are in chicago fire season 4 ?\nAnswer:", // the input with context
-    "assigned_weight": 2, // weight for current instance/process (1+alpha, weights should add up to 1 by default, but can also incorporate sampling temperature if needed)
-    "filter_p": 1.0, // optional filtering for low-probablity tokens, disabled by default
-}
-{
-    "input_index": 0, // instances that decode together should have the same input_index
-    "assigned_model": "meta-llama/Meta-Llama-3-8B", // same model for all instances in context-aware decoding, but can use different models here, e.g., DExperts, contrastive decoding, proxy tuning, etc.
-    "assigned_process": 1, // which GPU should take this instance
-    "context_string": "Answer the following question: \nQuestion: How many episodes are in chicago fire season 4 ?\nAnswer:", // the input without context
-    "assigned_weight": -1, // weight for current instance/process (-alpha, weights should add up to 1 by default, but can also incorporate sampling temperature if needed)
-}
-...
-```
+We provide two sample input files `nq_swap_2_-1.jsonl` and `nq_synth_2_-1.jsonl` in `data` folder. The details are described in `data/README.md`.
 
 ## Run AdaCAD
 ### For Question Answering
@@ -56,6 +36,32 @@ We explain the arguments in `run_nq.sh` as follows:
 - `FLAG`: whether to use int4 quantization to load the model.
 
 **Note:** Remember to use your own huggingface token and set your local cache path.
+
+### For Summarization
+Coming soon, please stay tuned.
+
+### How to incorporate AdaCAD into your own decoding method:
+You can use the following code snippet to compute the JSD value and then adjust the output probability distribution during decoding. 
+```python
+def get_jsd(p, q):
+    p = F.softmax(p, dim=-1)
+    q = F.softmax(q, dim=-1)
+    p, q = p.view(-1, p.size(-1)), q.view(-1, q.size(-1))
+    if ((p + q) == 0).any():
+        m = (0.5 * (p + q)).clamp_min(1e-9).log()
+    else:
+        m = (0.5 * (p + q)).log()
+    if torch.any(p <= 0):
+        p = p.clamp_min(1e-9)
+    if torch.any(q <= 0):
+        q = q.clamp_min(1e-9)
+    return 0.5 * (F.kl_div(m, p, reduction='batchmean', log_target=False) + F.kl_div(m, q, reduction='batchmean', log_target=False))
+
+# logits1 is the output logits of the input with context
+# logits2 is the output logits of the intput without context
+alpha = get_jsd(logits1, logits2)
+new_logits1 = (1 + alpha) * logits1 + (0 - alpha) * logits2
+```
 
 ## Acknowledgement
 We sincerely thank the authors of [CAD](https://github.com/xhan77/context-aware-decoding/tree/main) for their public code release.
