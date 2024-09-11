@@ -14,7 +14,7 @@ pip install -r requirements.txt
 ## Data
 We provide a sample input file `data/nq_swap_2_-1.json`.
 
-The format of the input file is as follow:
+The format of the input file is as follows:
 ```json
 {
     "input_index": 0, // instances that decode together should have the same input_index
