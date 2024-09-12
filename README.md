@@ -1,5 +1,6 @@
 # AdaCAD (Adaptive Context Aware Decoding)
-Code for the paper [AdaCAD: Adaptively Decoding to Balance Conflicts between Contextual and Parametric Knowledge]().
+Code for the paper [AdaCAD: Adaptively Decoding to Balance Conflicts between Contextual and Parametric Knowledge](https://arxiv.org/abs/2409.07394
+).
 
 by [Han Wang](https://hannight.github.io/), [Archiki Prasad](https://archiki.github.io/), [Elias Stengel-Eskin](https://esteng.github.io/), [Mohit Bansal](https://www.cs.unc.edu/~mbansal/).
 
@@ -72,5 +73,6 @@ We sincerely thank the authors of [CAD](https://github.com/xhan77/context-aware-
   title={AdaCAD: Adaptively Decoding to Balance Conflicts between Contextual and Parametric Knowledge},
   author={Han Wang and Archiki Prasad and Elias Stengel-Eskin and Mohit Bansal},
   year={2024},
+  journal={arXiv preprint arXiv:2409.07394}
 }
 ```
