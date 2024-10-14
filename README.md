@@ -71,7 +71,7 @@ def get_jsd(p, q):
     return 0.5 * (F.kl_div(m, p, reduction='batchmean', log_target=False) + F.kl_div(m, q, reduction='batchmean', log_target=False))
 
 # logits1 is the output logits of the input with context
-# logits2 is the output logits of the intput without context
+# logits2 is the output logits of the input without context
 alpha = get_jsd(logits1, logits2)
 new_logits1 = (1 + alpha) * logits1 + (0 - alpha) * logits2
 ```
