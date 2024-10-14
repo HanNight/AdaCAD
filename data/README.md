@@ -1,5 +1,5 @@
 ## Data
-We provide two sample input files `nq_swap_2_-1.jsonl` and `nq_synth_2_-1.jsonl`.
+We provide two sample input files `nq_swap_2_-1.jsonl`, `nq_synth_2_-1.jsonl`, and `tofu_1.5_-0.5.jsonl`.
 
 The format of the input file is as follows:
 ```json

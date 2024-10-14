@@ -13,20 +13,20 @@ pip install -r requirements.txt
 ```
 
 ## Data
-We provide two sample input files `nq_swap_2_-1.jsonl` and `nq_synth_2_-1.jsonl` in `data` folder. The details are described in `data/README.md`.
+We provide three sample input files `nq_swap_2_-1.jsonl`, `nq_synth_2_-1.jsonl`, and `tofu_1.5_-0.5.jsonl` in `data` folder. The details are described in `data/README.md`.
 
 ## Run AdaCAD
 ### For Question Answering
 ```bash
 HF_TOKEN=your_huggingface_token # User Access Token to authenticate to the Hub.
 HF_HUB_CACHE=your_cache_path # where repositories from the Hub will be cached locally (models, datasets and spaces).
-bash run_nq.sh /path/to/your/input/file
+bash run_qa.sh /path/to/your/input/file
 ```
 As an exampe, run the following command:
 ```bash
-bash run_nq.sh data/nq_swap_2_-1.json
+bash run_qa.sh data/nq_swap_2_-1.json
 ```
-We explain the arguments in `run_nq.sh` as follows:
+We explain the arguments in `run_qa.sh` as follows:
 - `GLOBALLEN`: the maximum sequence length of the model.
 - `MAXCTXLEN`: the maximum input context length.
 - `GENLEN`: the maximun generation length, should be `GENLEN = GLOBALLEN - MAXCTXLEN`.
@@ -39,11 +39,23 @@ We explain the arguments in `run_nq.sh` as follows:
 **Note:** Remember to use your own huggingface token and set your local cache path.
 
 ### For Summarization
-Coming soon, please stay tuned.
+```bash
+HF_TOKEN=your_huggingface_token # User Access Token to authenticate to the Hub.
+HF_HUB_CACHE=your_cache_path # where repositories from the Hub will be cached locally (models, datasets and spaces).
+bash run_summ.sh /path/to/your/input/file
+```
+As an exampe, run the following command:
+```bash
+bash run_summ.sh tofu_1.5_-0.5.jsonl
+```
+The aguments are the same as those in `run_qa.sh`, except that the new argument `THRESHOLD` is added to set the threshold for the `alpha` as warmup operation for long-form generation.
 
 ### How to incorporate AdaCAD into your own decoding method:
 You can use the following code snippet to compute the JSD value and then adjust the output probability distribution during decoding. 
 ```python
+import torch
+import torch.nn.functional as F
+
 def get_jsd(p, q):
     p = F.softmax(p, dim=-1)
     q = F.softmax(q, dim=-1)

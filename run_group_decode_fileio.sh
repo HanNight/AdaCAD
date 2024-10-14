@@ -16,6 +16,7 @@ decode_depth=$6
 projection_top_p=$7
 num_gpus=$8
 int4=$9
+threshold=${10:-0}
 
 ################ START ################
 
@@ -36,4 +37,5 @@ CUDA_VISIBLE_DEVICES=${multi_device_cuda} HF_HOME=${hf_cache} accelerate launch 
     --projection_top_p ${projection_top_p} \
     --big_model_inference yes \
     --num_gpus ${num_gpus} \
-    --int4 ${int4}
+    --int4 ${int4} \
+    --threshold ${threshold}

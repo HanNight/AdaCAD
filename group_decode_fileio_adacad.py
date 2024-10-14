@@ -133,7 +133,9 @@ def decode(args, batch_input_ids, dec_depth, model, tokenizer):
 
         torch.distributed.all_reduce(score1, group=args.gathering_group)
         torch.distributed.all_reduce(score2, group=args.gathering_group)
-        alpha = get_jsd(score1, score2) + args.offset
+        alpha = get_jsd(score1, score2)
+        if alpha < args.threshold:
+            alpha = args.threshold
 
         if args.assigned_weight >= 0:
             score = (1 + alpha) * score
@@ -257,7 +259,7 @@ def parse_args():
     parser.add_argument("--num_gpus", type=int, default=4)
     parser.add_argument("--int4", type=str, default="no", help="If ture, will use int4 quantization.")
     parser.add_argument("--local_dir", type=str, default="/nas-ssd2/hwang/huggingface", help="Local directory for model weights.")
-    parser.add_argument("--offset", type=float, default=0.0)
+    parser.add_argument("--threshold", type=float, default=0.0)
     args = parser.parse_args()
 
     return args
