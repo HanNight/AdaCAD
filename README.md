@@ -76,6 +76,24 @@ alpha = get_jsd(logits1, logits2)
 new_logits1 = (1 + alpha) * logits1 + (0 - alpha) * logits2
 ```
 
+## Evaluation
+### For Question Answering
+```bash
+python eval_qa.py --gold_data_path /path/to/your/gold/data/file --pred_data_path /path/to/your/predicted/file
+```
+
+### For Summarization
+The evaluation script for ROUGE-L and BERT-P is included as eval_summ.py. You can run it with the following example:
+```bash
+python eval_summ.py --pred_path /path/to/your/predicted/file --data_path /path/to/your/gold/data/file
+```
+
+The AlignScore evaluation scripts are included as `run_alignscore.py` (for general summarization datasets) and run_alignscore_tofu.py (for TofuEval dataset). First you need to download the AlignScore checkpoint from [here](https://huggingface.co/yzha/AlignScore/resolve/main/AlignScore-large.ckpt) and place it in your local directory. Then you can run them with the following example:
+
+```bash
+python run_alignscore.py GOLD_DATA_PATH PRED_PATH ALIGNSCORE_CKPT_PATH
+```
+
 ## Acknowledgement
 We sincerely thank the authors of [CAD](https://github.com/xhan77/context-aware-decoding/tree/main) for their public code release.
 
